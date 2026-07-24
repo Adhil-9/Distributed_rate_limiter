@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distributed Rate Limiter & Abuse Detection Visualizer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Navigation Header -->
+        <header class="top-header">
+            <div class="logo-area">
+                <div class="shield-icon">🛡️</div>
+                <div>
+                    <h1>Distributed Rate Limiter & Abuse Detector</h1>
+                    <p class="subtitle">Token Bucket Engine • Eventual Consistency Sync • Circuit Breaker & Degraded Mode</p>
+                </div>
+            </div>
+            <div class="system-status-pills">
+                <div class="pill" id="storage-status-pill">
+                    <span class="status-dot green"></span> Storage: Online
+                </div>
+                <div class="pill">
+                    Model: <strong id="consistency-model-label">EVENTUAL CONSISTENCY</strong>
+                </div>
+                <div class="pill">
+                    Fallback: <strong id="fallback-strategy-label">DEGRADED LOCAL</strong>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Grid -->
+        <main class="dashboard-grid">
+            <!-- Left Panel: Interactive Simulation Controls -->
+            <section class="card controls-card">
+                <h2>⚡ Interactive Traffic Control</h2>
+
+                <div class="form-group">
+                    <label for="client-id-input">Client Identifier</label>
+                    <input type="text" id="client-id-input" value="client-alpha" placeholder="e.g. client-123">
+                </div>
+
+                <div class="form-group">
+                    <label for="node-select">Routing Node</label>
+                    <select id="node-select">
+                        <option value="">Auto Load Balancer (Round Robin)</option>
+                        <option value="gateway-node-1">Gateway Node 1 (US-East)</option>
+                        <option value="gateway-node-2">Gateway Node 2 (EU-Central)</option>
+                        <option value="gateway-node-3">Gateway Node 3 (AP-South)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="endpoint-input">Target Endpoint</label>
+                    <input type="text" id="endpoint-input" value="/api/v1/resource">
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="btn-send-single">Send Request (1 Token)</button>
+                    <button class="btn btn-warning" id="btn-send-burst">Fire Burst (15 Requests)</button>
+                    <button class="btn btn-danger" id="btn-scan-abuse">Simulate Path Scan (404s)</button>
+                </div>
+
+                <hr class="divider">
+
+                <h2>🛠️ Fault Injection & Operations</h2>
+                <div class="fault-controls">
+                    <button class="btn btn-outline-danger" id="btn-toggle-outage">
+                        💥 Toggle Storage Outage (Fail/Heal)
+                    </button>
+                    <button class="btn btn-outline-success" id="btn-trigger-sync">
+                        🔄 Trigger Gossip Sync
+                    </button>
+                </div>
+
+                <div class="config-sliders">
+                    <div class="slider-group">
+                        <label>Capacity: <span id="val-cap">100</span></label>
+                        <input type="range" id="slider-cap" min="10" max="500" value="100">
+                    </div>
+                    <div class="slider-group">
+                        <label>Refill Rate: <span id="val-refill">10</span> req/s</label>
+                        <input type="range" id="slider-refill" min="1" max="100" value="10">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Center Panel: Cluster Nodes & Distributed State Architecture -->
+            <section class="card architecture-card">
+                <h2>🌐 Multi-Node Distributed Cluster Architecture</h2>
+                
+                <div class="nodes-grid" id="nodes-container">
+                    <!-- Nodes injected dynamically -->
+                </div>
+
+                <div class="storage-box" id="storage-container">
+                    <div class="storage-header">
+                        <span class="db-icon">🗄️</span>
+                        <h3>Distributed Shared State Store (Redis Cluster Abstraction)</h3>
+                        <span class="badge" id="storage-badge">HEALTHY</span>
+                    </div>
+                    <div class="storage-content" id="storage-content">
+                        <div class="empty-state">No synchronized key-value counts stored yet.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel: Live Response Inspector & Audit Log -->
+            <section class="card inspector-card">
+                <h2>🔍 Request & Header Inspector</h2>
+                <div class="response-inspector" id="response-inspector">
+                    <div class="code-block">
+                        <pre id="latest-response-json">// Click 'Send Request' to inspect HTTP headers & decisions</pre>
+                    </div>
+                </div>
+
+                <h2>📜 Live Decision Audit Stream</h2>
+                <div class="log-stream" id="log-stream">
+                    <!-- Logs appended dynamically -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
